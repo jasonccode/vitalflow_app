@@ -1,107 +1,74 @@
 import 'package:flutter/material.dart';
 
-class DashboardScreen extends StatefulWidget {
+class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
-
-  @override
-  State<DashboardScreen> createState() => _DashboardScreenState();
-}
-
-class _DashboardScreenState extends State<DashboardScreen> {
-  int vasosAgua = 5; // Estado inicial del contador
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Resumen Diario'),
-        backgroundColor: Colors.green,
+        title: const Text('VitalFlow - Dashboard'),
+        backgroundColor: Colors.teal,
+        foregroundColor: Colors.white,
       ),
-      body: ListView(
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
-        children: [
-          const Text('Hola, Jeison Camargo', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-          const Text('Hoy, 15 de septiembre', style: TextStyle(fontSize: 16, color: Colors.grey)),
-          const SizedBox(height: 20),
-          
-          // Tarjeta de Calorías
-          Card(
-            elevation: 4,
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  const Text('Calorías Quemadas', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
-                  const SizedBox(height: 20),
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      SizedBox(
-                        width: 120, height: 120,
-                        child: CircularProgressIndicator(
-                          value: 0.5, 
-                          strokeWidth: 12, 
-                          backgroundColor: Colors.grey[300], 
-                          color: Colors.orange
-                        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              '¡Hola, Jeison Camargo!',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const Text('Resumen de tus hábitos de hoy', style: TextStyle(color: Colors.grey)),
+            const SizedBox(height: 20),
+            Card(
+              elevation: 4,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  children: [
+                    const SizedBox(
+                      width: 70,
+                      height: 70,
+                      child: CircularProgressIndicator(
+                        value: 0.6,
+                        strokeWidth: 8,
+                        color: Colors.teal,
                       ),
-                      const Text('1250\n/ 2500 kcal', textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                    ],
-                  )
-                ],
+                    ),
+                    const SizedBox(width: 16),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        Text('Calorías Quemadas', style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text('1,250 / 2,000 kcal', style: TextStyle(fontSize: 18, color: Colors.teal)),
+                        Text('60% de la meta diaria'),
+                      ],
+                    )
+                  ],
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 20),
-
-          // Tarjeta de Hidratación interactiva
-          Card(
-            elevation: 4,
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Row(
-                    children: [
-                      Icon(Icons.water_drop, color: Colors.blue, size: 40),
-                      SizedBox(width: 10),
-                      Text('Hidratación', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.remove_circle_outline, color: Colors.red), 
-                        onPressed: () { 
-                          setState(() { if(vasosAgua > 0) vasosAgua--; }); 
-                        }
-                      ),
-                      Text('$vasosAgua / 8', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                      IconButton(
-                        icon: const Icon(Icons.add_circle_outline, color: Colors.green), 
-                        onPressed: () { 
-                          setState(() { vasosAgua++; }); 
-                        }
-                      ),
-                    ],
-                  )
-                ],
+            const SizedBox(height: 16),
+            Card(
+              child: ListTile(
+                leading: const Icon(Icons.water_drop, color: Colors.blue, size: 36),
+                title: const Text('Consumo de Agua'),
+                subtitle: const Text('5 de 8 vasos registrados (1.25 L)'),
+                trailing: const Icon(Icons.arrow_forward_ios),
               ),
             ),
-          )
-        ],
-      ),
-      
-      // Menú inferior
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.green,
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
-          BottomNavigationBarItem(icon: Icon(Icons.fitness_center), label: 'Actividad'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
-        ],
+            Card(
+              child: ListTile(
+                leading: const Icon(Icons.directions_run, color: Colors.orange, size: 36),
+                title: const Text('Tiempo Activo'),
+                subtitle: const Text('45 minutos de cardio registrados'),
+                trailing: const Icon(Icons.arrow_forward_ios),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

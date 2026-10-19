@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'screens/login_screen.dart';
-import 'screens/dashboard_screen.dart';
+import 'screens/main_screen.dart';
 
 void main() {
   runApp(const VitalFlowApp());
@@ -12,17 +12,17 @@ class VitalFlowApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'VitalFlow',
       debugShowCheckedModeBanner: false,
-      title: 'VitalFlow - Hábitos Saludables',
       theme: ThemeData(
-        primarySwatch: Colors.green,
-        scaffoldBackgroundColor: Colors.grey[100],
+        primarySwatch: Colors.teal,
+        useMaterial3: true,
+        scaffoldBackgroundColor: const Color(0xFFA8F5E5),
       ),
-      // Sistema de navegación inicial
-      initialRoute: '/',
+      initialRoute: '/login',
       routes: {
-        '/': (context) => const LoginScreen(),
-        '/dashboard': (context) => const DashboardScreen(),
+        '/login': (context) => const LoginScreen(),
+        '/home': (context) => const MainScreen(),
       },
     );
   }
