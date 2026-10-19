@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'screens/login_screen.dart';
 import 'screens/main_screen.dart';
 
@@ -14,10 +15,16 @@ class VitalFlowApp extends StatelessWidget {
     return MaterialApp(
       title: 'VitalFlow',
       debugShowCheckedModeBanner: false,
+      // En tu archivo lib/main.dart
       theme: ThemeData(
         primarySwatch: Colors.teal,
         useMaterial3: true,
         scaffoldBackgroundColor: const Color(0xFFA8F5E5),
+        inputDecorationTheme: const InputDecorationTheme(
+          filled: true,
+          fillColor: Colors.white,
+          border: OutlineInputBorder(),
+        ),
       ),
       initialRoute: '/login',
       routes: {
