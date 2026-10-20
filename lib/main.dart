@@ -15,7 +15,6 @@ class VitalFlowApp extends StatelessWidget {
     return MaterialApp(
       title: 'VitalFlow',
       debugShowCheckedModeBanner: false,
-      // En tu archivo lib/main.dart
       theme: ThemeData(
         primarySwatch: Colors.teal,
         useMaterial3: true,
