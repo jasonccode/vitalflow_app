@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 
 import 'screens/login_screen.dart';
 import 'screens/main_screen.dart';
+import 'services/notification_service.dart';
 
-void main() {
+Future<void> main() async {
+  // Necesario para usar plugins nativos antes de runApp()
+  WidgetsFlutterBinding.ensureInitialized();
+  await NotificationService.instance.init();
+
   runApp(const VitalFlowApp());
 }
 

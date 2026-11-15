@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../services/notification_service.dart';
+
 class HydrationScreen extends StatefulWidget {
   const HydrationScreen({super.key});
 
@@ -16,6 +18,17 @@ class _HydrationScreenState extends State<HydrationScreen> {
       setState(() {
         _glasses++;
       });
+      // Notificación local inmediata al completar la meta del día
+      if (_glasses == _dailyGoal) {
+        _notify(
+          () => NotificationService.instance.showNow(
+            id: NotificationService.goalId,
+            title: '¡Meta de hidratación cumplida!',
+            body: 'Completaste tus $_dailyGoal vasos de agua de hoy.',
+          ),
+          '¡Felicidades! Has alcanzado tu meta diaria.',
+        );
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -33,6 +46,61 @@ class _HydrationScreenState extends State<HydrationScreen> {
     }
   }
 
+  // Ejecuta una acción de notificación y le informa el resultado al usuario
+  Future<void> _notify(
+    Future<bool> Function() action,
+    String successMessage,
+  ) async {
+    String message;
+    try {
+      final shown = await action();
+      message = shown
+          ? successMessage
+          : 'Activa el permiso de notificaciones para recibir avisos.';
+    } catch (e) {
+      message = 'No se pudo enviar la notificación: $e';
+    }
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
+
+  // Notificación programada: llega 10 segundos después
+  void _remindInTenSeconds() {
+    _notify(
+      () => NotificationService.instance.scheduleIn(
+        const Duration(seconds: 10),
+        id: NotificationService.reminderId,
+        title: 'Hora de hidratarte',
+        body: 'Llevas $_glasses de $_dailyGoal vasos. ¡Toma un vaso de agua!',
+      ),
+      'Recordatorio programado: llegará en 10 segundos.',
+    );
+  }
+
+  // Notificación periódica: se repite cada hora
+  void _remindEveryHour() {
+    _notify(
+      () => NotificationService.instance.repeatHourly(
+        id: NotificationService.hourlyId,
+        title: 'Hora de hidratarte',
+        body: 'Recuerda tomar un vaso de agua.',
+      ),
+      'Recordatorio activado: te avisaremos cada hora.',
+    );
+  }
+
+  void _cancelReminders() {
+    _notify(
+      () async {
+        await NotificationService.instance.cancelAll();
+        return true;
+      },
+      'Recordatorios cancelados.',
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +110,7 @@ class _HydrationScreenState extends State<HydrationScreen> {
         foregroundColor: Colors.white,
       ),
       body: Center(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -88,6 +156,46 @@ class _HydrationScreenState extends State<HydrationScreen> {
                     onPressed: _addGlass,
                     backgroundColor: Colors.teal,
                     child: const Icon(Icons.add, color: Colors.white),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 32),
+              const Divider(),
+              const SizedBox(height: 8),
+              // Recordatorios con notificaciones locales
+              const Text(
+                'Recordatorios',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 12),
+              Wrap(
+                alignment: WrapAlignment.center,
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: _remindInTenSeconds,
+                    icon: const Icon(Icons.timer),
+                    label: const Text('En 10 segundos'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.teal,
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
+                  ElevatedButton.icon(
+                    onPressed: _remindEveryHour,
+                    icon: const Icon(Icons.repeat),
+                    label: const Text('Cada hora'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.teal,
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
+                  TextButton.icon(
+                    onPressed: _cancelReminders,
+                    icon: const Icon(Icons.notifications_off),
+                    label: const Text('Cancelar'),
+                    style: TextButton.styleFrom(foregroundColor: Colors.teal),
                   ),
                 ],
               ),
